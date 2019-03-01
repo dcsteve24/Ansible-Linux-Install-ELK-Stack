@@ -5,6 +5,8 @@ Installs ELK_Stack on the target with default values specified in the Elastic fo
 
 This play will run out of the box for logging Syslog events (SSH, Sudo events, Syslog, and User/Group Creation), with no changes required. Additional modules can be added as desired after the play is ran. Changes are required if the user does not want to install with the defaults.
 
+For RHEL distros, I open the ports in firewalld automatically. For any other distro, you will need to open the ports in your firewall as needed.
+
 Requirements
 ------------
 
