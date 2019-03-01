@@ -8,7 +8,9 @@ This play will run out of the box for logging Syslog events (SSH, Sudo events, S
 Requirements
 ------------
 
-N/A
+1) Configure your hosts and ansible user at ./playbooks/ELK_Stack.yml
+2) Configure any desired changes from the defaults in ./vars/main.yml (see Role Variables section for what to place).
+3) Run the play. I usually run my play with ansible-playbook -kK /path/to/play.
 
 Role Variables
 --------------
