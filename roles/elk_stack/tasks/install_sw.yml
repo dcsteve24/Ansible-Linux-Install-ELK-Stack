@@ -19,7 +19,7 @@
     baseurl: https://artifacts.elastic.co/packages/6.x/yum
     gpgcheck: true
     gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-    description: Elastic 6.X Repo
+    description: Elastic_6.X_Repo
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
 
 - name: install_sw | Install Elastic SW (Red Hat Distros)
