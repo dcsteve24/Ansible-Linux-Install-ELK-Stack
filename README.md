@@ -11,7 +11,10 @@ Requirements
 ------------
 
 1) Configure your hosts and ansible user at ./playbooks/ELK_Stack.yml
-2) Configure any desired changes from the defaults in ./vars/main.yml (see Role Variables section for what to place).
+2) Configure any desired changes from the defaults in ./roles/vars/main.yml (see Role Variables section for what to place).
+    A) You will need to make the vars directory with mkdir ./roles/vars/
+    B) Then make the file with vi ./roles/vars/main.yml
+    C) Add --- at the top, and under it add the variables you wish to change.
 3) Run the play. I usually run my play with ansible-playbook -kK /path/to/play.
 
 Role Variables
