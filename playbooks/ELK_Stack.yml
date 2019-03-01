@@ -1,9 +1,6 @@
 ---
-#Steven Craig
-#17Feb19
-
-- hosts: auditor.besl.org
-  remote_user: ansible
+- hosts: 
+  remote_user: 
   become: true
   roles:
     -  elk_stack
