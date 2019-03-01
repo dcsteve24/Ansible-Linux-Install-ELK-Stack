@@ -26,7 +26,7 @@
   when: (conf.changed) or (conf.failed)
 
 - name: configure_filebeat | Enables the beat's system module
-  command: /usr/bin/filebeat modules enable system auditd
+  command: /usr/bin/filebeat modules enable system
 
 - name: configure_filebeat | Load Index Template
   command: /usr/bin/filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["{{ server_ip }}:{{ elastic_port}}"]'
