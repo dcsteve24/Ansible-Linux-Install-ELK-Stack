@@ -3,7 +3,7 @@ Role Name
 
 Installs ELK_Stack on the target with default values specified in the Elastic formal instructions. Is tailored to install on CentOS, RHEL, Ubuntu, or Debian.
 
-This play will run out of the box for logging Syslog events (SSH, Sudo events, Syslog, and User/Group Creation), with no changes required. Changes are required if the user does not want to install with the defaults.
+This play will run out of the box for logging Syslog events (SSH, Sudo events, Syslog, and User/Group Creation), with no changes required. Additional modules can be added as desired after the play is ran. Changes are required if the user does not want to install with the defaults.
 
 Requirements
 ------------
