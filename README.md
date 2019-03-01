@@ -1,4 +1,4 @@
-Role Name
+ELK_Stack
 =========
 
 Installs ELK_Stack on the target with default values specified in the Elastic formal instructions. Is tailored to install on CentOS, RHEL, Ubuntu, or Debian.
