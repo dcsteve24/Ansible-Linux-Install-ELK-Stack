@@ -24,7 +24,6 @@
     - { regex: "#output.logstash:", replace: "output.logstash:" }
     - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ server_ip }}:{{ beat_port}}"]'}
   when: (conf.changed) or (conf.failed)
-  notify: restart filebeat
 
 - name: configure_filebeat | Enables the beat's system module
   command: /usr/bin/filebeat modules enable system auditd
