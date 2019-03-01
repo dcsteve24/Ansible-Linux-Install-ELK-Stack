@@ -1,0 +1,33 @@
+---
+- name: configure_filebeat | Load Vars
+  include_vars: "main.yml"
+
+- name: configure_filebeat | Configure Filebeat (Comment/Uncomment Required Fields)
+  replace:
+    path: "{{ filebeat_conf }}"
+    mode: 0600
+    owner: root
+    group: root
+    regexp: "{{ item.regex }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regex: "output.elasticsearch:", replace: "#output.elasticsearch" }
+    - { regex: 'hosts: \["localhost:9200"]', replace: '#hosts: ["localhost:9200"]' }
+    - { regex: "#output.logstash:", replace: "output.logstash:" }
+    - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ server_ip }}:{{ beat_port}}"]'}
+
+- name: configure_filebeat | Enables the beat's system module
+  command: /usr/bin/filebeat modules enable system auditd
+
+- name: configure_filebeat | Load Index Template
+  command: /usr/bin/filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["{{ server_ip }}:{{ elastic_port}}"]'
+
+- name: configure_filebeat | Load Kibana Dashboard
+  command: /usr/bin/filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['{{ server_ip}}:{{ elastic_port}}'] -E setup.kibana.host={{ server_ip }}:{{ kibana_port }}
+
+- name: configure_filebeat | Start Filebeat
+  service:
+    name: filebeat
+    state: started
+    enabled: true
+

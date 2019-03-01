@@ -1,0 +1,22 @@
+---
+- name: configure_kibana | Load Vars
+  include_vars: "main.yml"
+
+- name: configure_kibana | Configure port and elastic URL
+  lineinfile:
+    path: "{{ kibana_conf }}"
+    state: present
+    create: yes
+    mode: 0644
+    owner: root
+    group: root
+    line: '{{ item }}'
+  with_items:
+    - 'server.host: "{{ server_ip }}"'
+    - 'server.port: {{ kibana_port }}'
+    - 'elasticsearch.hosts: ["http://{{ server_ip }}:{{ elastic_port}}"]'
+
+- name: configure_kibana | Start Kibana Service
+  service:
+    name: kibana
+    state: started

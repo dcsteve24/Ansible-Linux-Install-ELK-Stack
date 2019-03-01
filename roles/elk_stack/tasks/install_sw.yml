@@ -1,0 +1,70 @@
+---
+- name: install_sw | Install Java (Red Hat Distros)
+  yum:
+    name:
+      - java-1.8.0-openjdk
+      - java-1.8.0-openjdk-devel
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: install_sw | Grab Public Signing Key (Red Hat Distros)
+  rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: install_sw | Add Yum Repo (Red Hat Distros)
+  yum_repository:
+    name: Elastic repository for 6.X packages
+    baseurl: https://artifacts.elastic.co/packages/6.x/yum
+    gpgcheck: true
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: install_sw | Install Elastic SW (Red Hat Distros)
+  yum:
+    name:
+      - elasticsearch
+      - logstash
+      - kibana
+      - filebeat
+    update_cache: true
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: install_sw | Install Java (Debian Distros)
+  apt:
+    name:
+      - openjdk-8-jre-headless
+      - openjdk-8-jdk-headless
+      - apt-transport-https
+    state: latest
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: install_sw | Grab Public Signing Key (Debian Distros)
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: install_sw | Add Apt Repo (Debian Distros)
+  lineinfile:
+    path: /etc/apt/sources.list.d/elastic.list
+    state: present
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    line: 'deb https://artifacts.elastic.co/packages/6.x/apt stable main'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: install_sw | Install Elastic SW (Debian Distro)
+  apt:
+    name:
+      - elasticsearch
+      - logstash
+      - kibana
+      - filebeat
+    state: latest
+    update_cache: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
