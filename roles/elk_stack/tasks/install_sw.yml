@@ -30,6 +30,16 @@
       - filebeat
     update_cache: true
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: install_sw | Open Firewall Ports (RedHat Distros)
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - "{{ elastic_port }}/tcp"
+    - "{{ kibana_port }}/tcp"
+    - "{{ beat_port }}/tcp"
 
 - name: install_sw | Install Java (Debian Distros)
   apt:
