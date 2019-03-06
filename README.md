@@ -44,8 +44,8 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 | logstash_sysfilter_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/10-syslog-filter.conf | Path to the system logs filter configuration for logstash |
 | logstash_auditdfilter_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/11-auditd-filter.conf | Path to the auditd logs filter configuration for logstash |
 | logstash_output_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/30-elasticsearch-output.conf | Path to the output configuration for logstash |
-| curator_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/curator.yml |
-| curator_delete_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/delete_indices.yml |
+| curator_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/curator.yml | Path to a curator configuration file |
+| curator_delete_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/delete_indices.yml | Path to a curator configuration file for delete actions |
 
 Dependencies
 ------------
