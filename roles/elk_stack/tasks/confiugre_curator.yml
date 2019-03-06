@@ -1,0 +1,77 @@
+---
+- name: configure_curator | Load Vars
+  include_vars: "main.yml"
+
+- name: configure_curator | Configure Curator
+  blockinfile:
+    path: "{{ curator_conf }}"
+    owner: root
+    group: root
+    mode: 0644
+    create: true
+    backup: true
+    block: |
+      ---
+      client:
+        hosts:
+          - {{ server_ip }}
+        port: {{ elastic_port }}
+        url_prefix:
+        use_ssl: False
+        certificate:
+        client_cert:
+        client_key:
+        ssl_no_validate: False
+        http_auth:
+        timeout: 30
+        master_only: False
+      logging:
+        loglevel: INFO
+        logfile:
+        logformat: default
+        blacklist: ['elasticsearch', 'urllib3']
+
+- name: configure_curator | Configure the Curator Delete Action
+  blockinfile:
+    path: "{{ curator_delete_conf }}"
+    owner: root
+    group: root
+    mode: 0644
+    create: true
+    backup: true
+    block: |
+      ---
+      actions:
+        1:
+          action: delete_indices
+          description: >-
+            Delete indices older than 10 days (based on index name), for logstash
+            prefixed indices. Ignore the error if the filter does not result in an
+            actionable list of indices (ignore_empty_list) and exit cleanly.
+          options:
+            ignore_empty_list: True
+            timeout_override:
+            continue_if_exception: False
+            disable_action: False
+          filters:
+            - filtertype: pattern
+              kind: prefix
+              value: logstash-
+              exclude:
+            - filtertype: age
+              source: name
+              direction: older
+              timestring: '%Y.%m.%d'
+              unit: days
+              unit_count: {{ delete_after_days }}
+              exclude:
+
+- name: configure_curator | Configure cron job
+  lineinfile:
+    path: /etc/crontab
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+    insertafter: '# m'
+    line: '00 8 * * * root curator {{ curator_delete_conf }} --config {{ curator_conf }}'
