@@ -38,7 +38,8 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 | elastic_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/elasticsearch/elasticsearch.yml | Path to the elasticsearch configuration file |
 | kibana_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/kibana/kibana.yml | Path to the kibana configuration file |
 | logstash_beat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/01-beats-input.conf | Path to the input configuration for logstash |
-| logstash_sysfilter_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/10-syslog-filter.conf | Path to the filter configuration for logstash |
+| logstash_sysfilter_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/10-syslog-filter.conf | Path to the system logs filter configuration for logstash |
+| logstash_auditdfilter_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/11-auditd-filter.conf | Path to the auditd logs filter configuration for logstash |
 | logstash_output_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/30-elasticsearch-output.conf | Path to the output configuration for logstash |
 
 Dependencies
