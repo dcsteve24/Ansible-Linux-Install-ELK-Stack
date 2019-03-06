@@ -80,3 +80,7 @@
     state: latest
     update_cache: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: install_sw | Install Curator (All OS)
+  pip:
+    name: elasticsearch-curator
