@@ -5,3 +5,4 @@
 - include: configure_kibana.yml
 - include: configure_logstash.yml
 - include: configure_filebeat.yml
+- include: configure_curator.yml
