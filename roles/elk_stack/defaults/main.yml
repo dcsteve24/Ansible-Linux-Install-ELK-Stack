@@ -11,3 +11,6 @@ logstash_beat_conf: /etc/logstash/conf.d/01-beats-input.conf
 logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
 logstash_auditdfilter_conf: /etc/logstash/conf.d/11-auditd-filter.conf
 logstash_output_conf: /etc/logstash/conf.d/30-elasticsearch-output.conf
+delete_after_days: 10
+curator_conf: /etc/curator/curator.yml
+curator_delete_conf: /etc/curator/delete_indices.yml
