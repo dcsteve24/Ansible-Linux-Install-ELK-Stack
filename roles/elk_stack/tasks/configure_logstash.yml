@@ -73,19 +73,21 @@
     backup: true
     block: |
       filter{
-        grok { match => {"message" => ["type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} pid=%{NUMBER:[auditd][log][pid]} res=%{WORD:[auditd][log][res]}(\')?",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): pid=%{NUMBER:[auditd][log][pid]} uid=%{NUMBER} old auid=%{NUMBER:[auditd][log][old_auid]} new auid=%{NUMBER:[auditd][log][new_auid]} old ses=%{NUMBER:[auditd][log][old_ses]} new ses=%{NUMBER:[auditd][log][new_ses]}",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} addr=%{IPORHOST:[auditd][log][addr]} %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=\"%{DATA:[auditd][log][a0]}\"( %{GREEDYDATA})?",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=%{WORD:[auditd][log][a0]} %{GREEDYDATA} items=%{NUMBER:[auditd][log][items]} ppid=%{NUMBER:[auditd][log][ppid]} pid=%{NUMBER:[auditd][log][pid]} %{GREEDYDATA}",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-               "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (item=%{NUMBER:[auditd][log][item]} )?%{GREEDYDATA}"
-                ]}
-        }
-        geoip {
-                source => "[auditd][log][addr]"
-                target => "[auditd][log][geoip]"
+        if if [fileset][module] == "auditd" {
+          grok { match => {"message" => ["type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} pid=%{NUMBER:[auditd][log][pid]} res=%{WORD:[auditd][log][res]}(\')?",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): pid=%{NUMBER:[auditd][log][pid]} uid=%{NUMBER} old auid=%{NUMBER:[auditd][log][old_auid]} new auid=%{NUMBER:[auditd][log][new_auid]} old ses=%{NUMBER:[auditd][log][old_ses]} new ses=%{NUMBER:[auditd][log][new_ses]}",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} addr=%{IPORHOST:[auditd][log][addr]} %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=\"%{DATA:[auditd][log][a0]}\"( %{GREEDYDATA})?",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=%{WORD:[auditd][log][a0]} %{GREEDYDATA} items=%{NUMBER:[auditd][log][items]} ppid=%{NUMBER:[auditd][log][ppid]} pid=%{NUMBER:[auditd][log][pid]} %{GREEDYDATA}",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
+                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (item=%{NUMBER:[auditd][log][item]} )?%{GREEDYDATA}"
+                  ]}
+          }
+          geoip {
+                  source => "[auditd][log][addr]"
+                  target => "[auditd][log][geoip]"
+          }
         }
       }
 
