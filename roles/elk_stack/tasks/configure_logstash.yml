@@ -63,34 +63,23 @@
         }
       }
 
-- name: configure_logstash | Configure Logstash Sys Log Filter
+- name: configure_logstash | Make the Template File
   blockinfile:
-    path: "{{ logstash_auditdfilter_conf }}"
+    path: "{{ template_path }}"
     owner: root
     group: root
     mode: 0644
     create: true
     backup: true
     block: |
-      filter{
-        if if [fileset][module] == "auditd" {
-          grok { match => {"message" => ["type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} pid=%{NUMBER:[auditd][log][pid]} res=%{WORD:[auditd][log][res]}(\')?",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): pid=%{NUMBER:[auditd][log][pid]} uid=%{NUMBER} old auid=%{NUMBER:[auditd][log][old_auid]} new auid=%{NUMBER:[auditd][log][new_auid]} old ses=%{NUMBER:[auditd][log][old_ses]} new ses=%{NUMBER:[auditd][log][new_ses]}",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} addr=%{IPORHOST:[auditd][log][addr]} %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=\"%{DATA:[auditd][log][a0]}\"( %{GREEDYDATA})?",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (%{GREEDYDATA})?a0=%{WORD:[auditd][log][a0]} %{GREEDYDATA} items=%{NUMBER:[auditd][log][items]} ppid=%{NUMBER:[auditd][log][ppid]} pid=%{NUMBER:[auditd][log][pid]} %{GREEDYDATA}",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} acct=\"%{DATA:[auditd][log][acct]}\" %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): %{GREEDYDATA} res=%{WORD:[auditd][log][res]}(\')?",
-                 "type=%{WORD:[auditd][log][record_type]} msg=audit\(%{NUMBER}:%{NUMBER:[auditd][log][sequence]}\): (item=%{NUMBER:[auditd][log][item]} )?%{GREEDYDATA}"
-                  ]}
+      {
+        "index_patterns": ["*"],
+        "order": 0
+        "settings" : {
+          "number_of_shards": {{ shards }},
+          "number_of_replicas": {{ replicas }}
           }
-          geoip {
-                  source => "[auditd][log][addr]"
-                  target => "[auditd][log][geoip]"
-          }
-        }
       }
-
 
 - name: configure_logstash | Configure Logstash's Output
   blockinfile:
@@ -104,8 +93,11 @@
       output {
         elasticsearch {
           hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-          manage_template => false
-          index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+          index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM}"
+          manage_template => true
+          template => "{{ template_path }}"
+          template_name => "shards_config"
+          template_overwrite => true
         }
       }
 

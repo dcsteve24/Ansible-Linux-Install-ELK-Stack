@@ -2,14 +2,6 @@
 - name: install_sw | Load Vars
   include_vars: "main.yml"
 
-- name: install_sw | Install Java (Red Hat Distros)
-  yum:
-    name:
-      - java-1.8.0-openjdk
-      - java-1.8.0-openjdk-devel
-    state: latest
-  when: ansible_os_family == "RedHat"
-
 - name: install_sw | Grab Public Signing Key (Red Hat Distros)
   rpm_key:
     state: present
@@ -28,38 +20,17 @@
 - name: install_sw | Install Elastic SW (Red Hat Distros)
   yum:
     name:
-      - elasticsearch
-      - logstash
-      - kibana
       - filebeat
+      - auditbeat
     update_cache: true
   when: ansible_os_family == "RedHat"
 
-- name: install_sw | Open Firewall Ports For Non-Localhost (RedHat Distros)
-  firewalld:
-    port: "{{ item }}"
-    permanent: true
-    state: enabled
-  with_items:
-    - "{{ elastic_port }}/tcp"
-    - "{{ kibana_port }}/tcp"
-  when: ansible_os_family == "RedHat" and server_ip != "localhost"
-
-- name: install_sw | Open Firewall Ports for Beats Regardless of Install IP (RedHat Distros)
+- name: install_sw | Open Firewall Ports (RedHat Distros)
   firewalld:
     port: "{{ beat_port }}/tcp"
     permanent: true
     state: enabled
   when: ansible_os_family == "RedHat"
-
-- name: install_sw | Install Java (Debian Distros)
-  apt:
-    name:
-      - openjdk-8-jre-headless
-      - openjdk-8-jdk-headless
-      - apt-transport-https
-    state: latest
-  when: ansible_os_family == "Debian"
 
 - name: install_sw | Grab Public Signing Key (Debian Distros)
   apt_key:
@@ -82,31 +53,15 @@
 - name: install_sw | Install Elastic SW (Debian Distro)
   apt:
     name:
-      - elasticsearch
-      - logstash
-      - kibana
       - filebeat
+      - auditbeat
     state: latest
     update_cache: true
   when: ansible_os_family == "Debian"
 
-- name: install_sw | Open Firewall Ports For Non-Localhost (Debian Distros)
-  ufw:
-    rule: allow
-    port: "{{ item }}"
-    proto: tcp
-  with_items:
-    - "{{ elastic_port }}"
-    - "{{ kibana_port }}"
-  when: ansible_os_family == "Debian" and server_ip != "localhost"
-
-- name: install_sw | Open Beats Port Regardless of Install IP (Debian Distros)
+- name: install_sw | Open Firewall Ports (Debian Distros)
   ufw:
     rule: allow
     port: "{{ beat_port }}"
     proto: tcp
   when: ansible_os_family == "Debian"
-
-- name: install_sw | Install Curator (All OS)
-  pip:
-    name: elasticsearch-curator

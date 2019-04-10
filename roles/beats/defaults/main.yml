@@ -1,0 +1,5 @@
+---
+# defaults file for filebeat
+auditbeat_conf: /etc/auditbeat/auditbeat.yml
+beat_port: 5044
+filebeat_conf: /etc/filebeat/filebeat.yml

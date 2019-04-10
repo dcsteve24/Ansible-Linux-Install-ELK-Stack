@@ -3,7 +3,7 @@
   include_vars: "main.yml"
 
 - name: configure_filebeat | See if Default Config File
-    lineinfile:
+  lineinfile:
     path: "{{ filebeat_conf }}"
     line: "#output.logstash:"
     state: absent
@@ -22,21 +22,15 @@
     - { regex: "output.elasticsearch:", replace: "#output.elasticsearch" }
     - { regex: 'hosts: \["localhost:9200"]', replace: '#hosts: ["localhost:9200"]' }
     - { regex: "#output.logstash:", replace: "output.logstash:" }
-    - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ server_ip }}:{{ beat_port}}"]'}
+    - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ elk_ip }}:{{ beat_port}}"]'}
   when: (conf.changed) or (conf.failed)
+  notify: restart filebeat
 
-- name: configure_filebeat | Enables the beat's system module
-  command: /usr/bin/filebeat modules enable system
-
-- name: configure_filebeat | Load Index Template
-  command: /usr/bin/filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["{{ server_ip }}:{{ elastic_port}}"]'
-
-- name: configure_filebeat | Load Kibana Dashboard
-  command: /usr/bin/filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['{{ server_ip}}:{{ elastic_port}}'] -E setup.kibana.host={{ server_ip }}:{{ kibana_port }}
+- name: configure_filebeat | Enables the beat's module, templates, and dashboard
+  command: "/usr/bin/filebeat modules enable system"
 
 - name: configure_filebeat | Start Filebeat
   service:
     name: filebeat
     state: started
     enabled: true
-

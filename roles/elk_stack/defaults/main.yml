@@ -1,16 +1,17 @@
 ---
 # defaults file for ELK_Stack
-server_ip: localhost
-elastic_port: 9200
-kibana_port: 5601
 beat_port: 5044
-filebeat_conf: /etc/filebeat/filebeat.yml
-elastic_conf: /etc/elasticsearch/elasticsearch.yml
-kibana_conf: /etc/kibana/kibana.yml
-logstash_beat_conf: /etc/logstash/conf.d/01-beats-input.conf
-logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
-logstash_auditdfilter_conf: /etc/logstash/conf.d/11-auditd-filter.conf
-logstash_output_conf: /etc/logstash/conf.d/30-elasticsearch-output.conf
-delete_after_days: 10
 curator_conf: /etc/curator/curator.yml
 curator_delete_conf: /etc/curator/delete_indices.yml
+delete_after_days: 365
+elastic_conf: /etc/elasticsearch/elasticsearch.yml
+elastic_port: 9200
+kibana_conf: /etc/kibana/kibana.yml
+kibana_port: 5601
+logstash_beat_conf: /etc/logstash/conf.d/01-beats-input.conf
+logstash_output_conf: /etc/logstash/conf.d/30-elasticsearch-output.conf
+logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
+replicas: 0
+server_ip: localhost
+shards: 1
+template_path: /etc/logstash/templates/shards.json
