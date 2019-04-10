@@ -18,7 +18,7 @@ For RHEL distros, I open the ports in firewalld automatically. For Debian I open
 
 The beats role can be ran independently by running the ./playbooks/Beats.yml on the targets you wish to audit/monitor. It also has a separate readme contained in its role root folder for more information.
 
-**As I am making this, there are known issues with the 6.7.1 auditbeat. The os_family it pulls does not line up with the what its looking for: expects "RedHat", gets "rhel". Because of this, the service won't start. This should be fixed in 6.7.2 based on issues reported in github**
+**As I am making this, there are known issues with the 6.7.1 auditbeat for RHEL. The os_family it pulls does not line up with the what its looking for: expects "RedHat", gets "rhel". Because of this, the service won't start. This should be fixed in 6.7.2 based on issues reported in github**
 
 Requirements
 ------------
