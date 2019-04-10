@@ -8,8 +8,9 @@ This play will run out of the box with no changes necessary. But if accepting al
 This play installs and configures Elasticsearch, Logstash, Kibana, and then calls the beats role which also installs and configures Auditbeat and Filebeat. This play loads all the templates and dashboards to easily view the information. Additional modules can be added as desired after the play is ran. Changes are required if the user does not want to install with the defaults.
 
 The play also configures indexes to be rotated on a month basis and keeps it as a single shard with no replicas. This play is designed for a small environment. You can edit the shards and replica defaults through the variables. For larger environments this is strongly recommended as your index will be very large and have no backups. If you wish for daily rotation, change the following in ./roles/elk_stack/tasks/configure_elastic.yml located under the "Configure Logstash's Output" task:
-current:   index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM}"
-change to: index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+
+- current:   index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM}"
+- change to: index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
 
 This play also installs curator which will automatically clean out indices older than X days (default 365). It adds this to the crontab.
 
