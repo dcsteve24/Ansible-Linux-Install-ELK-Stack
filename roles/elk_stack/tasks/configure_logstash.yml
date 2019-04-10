@@ -93,7 +93,7 @@
       output {
         elasticsearch {
           hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-          index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM}"
+          index => "%{[@metadata][beat]}-%{+YYYY.MM}"
           manage_template => true
           template => "{{ template_path }}"
           template_name => "shards_config"
