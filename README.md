@@ -36,12 +36,14 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 
 | Variable  | Location | Required | Default | Description
 | ------------- | ------------- | ------------- | ------------- | ------------- |
+| auditbeat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/auditbeat/auditbeat.yml | Path to the auditbeat configuration file |
 | beat_port | ./roles/elk_stack/defaults/main.yml | Yes | 5044 | Configures the port for logstash to listen on and where beats send to |
 | curator_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/curator.yml | Path to a curator configuration file |
 | curator_delete_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/delete_indices.yml | Path to a curator configuration file for delete actions |
 | delete_after_days | ./roles/elk_stack/defaults/main.yml | Yes | 365 | Configures the threshold of when indicies are deleted |
 | elastic_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/elasticsearch/elasticsearch.yml | Path to the elasticsearch configuration file |
 | elastic_port | ./roles/elk_stack/defaults/main.yml | Yes | 9200 | Configures the port elasticsearch will listen on |
+| filebeat_conf | ./roles/beats/defaults/main.yml | Yes | /etc/filebeat/filebeat.yml | Path to the filebeat configuration file |
 | kibana_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/kibana/kibana.yml | Path to the kibana configuration file |
 | kibana_port | ./roles/elk_stack/defaults/main.yml | Yes | 5601 | Configures the port kibana will listen on |
 | logstash_beat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/01-beats-input.conf | Path to the input configuration for logstash |
@@ -52,7 +54,7 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 | shards | ./roles/elk_stack/defaults/main.yml | Yes | 1 | The amount of shards that will be kept (Applied to all indexes) |
 | template_path | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/templates/shards.json | Path where the template file will be created/stored at |
 
-This play also depends on the beats role which is contained in the same repo. The following are the variables from that role:
+This play also depends on the beats role which is contained in the same repo. The following are the variables from that role. These fields are passed automatically from the ELK_Stack role so you only need to change the ELK_Stack vars while running that play; if running the beats role individually (i.e. to install beats on other systems), these fields might need changed as desired:
 
 | Variable  | Location | Required | Default | Description
 | ------------- | ------------- | ------------- | ------------- | ------------- |

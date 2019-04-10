@@ -6,7 +6,10 @@
   include_role:
     name: beats
   vars:
+    auditbeat_conf: "{{ auditbeat_conf }}"
+    beat_port: "{{ beat_port }}"
     elk_ip: "{{ server_ip }}"
+    filebeat_conf: "{{ filebeat_conf }}"    
 
 - name: configure_beats | Load Filebeat Index Template
   command: /usr/bin/filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["{{ server_ip }}:{{ elastic_port}}"]'
