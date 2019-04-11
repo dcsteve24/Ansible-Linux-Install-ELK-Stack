@@ -75,9 +75,9 @@
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
   with_items:
-    - { path: "{{ filebeat_template_path }}", regexp: "filebeat-*", replace: "filebeat-*"}
+    - { path: "{{ filebeat_template_path }}", regexp: "filebeat-.*", replace: "filebeat-*"}
     - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
-    - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-*", replace: "auditbeat-*"}
+    - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-.*", replace: "auditbeat-*"}
     - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
 
 - name: configure_logstash | Add the Replica Line to the Templates

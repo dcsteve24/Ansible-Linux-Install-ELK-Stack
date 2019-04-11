@@ -1,5 +1,5 @@
 ---
 # tasks file for filebeat
-- include: install_sw.yml
-- include: configure_filebeat.yml
-- include: configure_auditbeat.yml
+- include: install_sw.yaml
+- include: configure_filebeat.yaml
+- include: configure_auditbeat.yaml

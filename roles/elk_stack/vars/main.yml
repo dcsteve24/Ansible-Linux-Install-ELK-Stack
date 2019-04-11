@@ -1,1 +1,6 @@
 ---
+
+#SSL Settings (Leave Alone If Not Setting Up SSL)
+cert_pem_key_name: ""
+cert_pem_crt_name: ""
+cert_ca_chain_name: ""

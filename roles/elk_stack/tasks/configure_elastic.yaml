@@ -2,7 +2,7 @@
 - name: configure_elastic | Load Vars
   include_vars: "main.yml"
 
-- name: configure_elastic.yml | Configure Listening IP and Port
+- name: configure_elastic | Configure Listening IP and Port
   lineinfile:
     path: "{{ elastic_conf }}"
     state: present

@@ -1,8 +1,10 @@
 ---
 # tasks file for ELK_Stack
-- include: install_sw.yml
-- include: configure_elastic.yml
-- include: configure_kibana.yml
-- include: configure_beats.yml
-- include: configure_logstash.yml
-- include: configure_curator.yml
+- include: install_sw.yaml
+- include: configure_elastic.yaml
+- include: configure_kibana.yaml
+- include: configure_beats.yaml
+- include: configure_logstash.yaml
+- include: configure_curator.yaml
+- include: configure_ssl.yaml
+  when: ssl_on

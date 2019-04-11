@@ -65,6 +65,29 @@ This play also depends on the beats role which is contained in the same repo. Th
 | elk_ip | ./roles/beats/vars/main.yml | Yes | N/A | Configures beats to point to ELK Stack |
 | filebeat_conf | ./roles/beats/defaults/main.yml | Yes | /etc/filebeat/filebeat.yml | Path to the filebeat configuration file |
 
+If desired, SSL can be enabled. This play is configured for .pem style certs. You can convert your cert if yours differs. If you already have certificates and keys for your environment, place them in /etc/ssl/ or change the default location by adding the var to the vars main.yml file.
+
+To configure SSL do the following variables need set at minimal. Configure/add the following vars in ./roles/elk_stack/vars/main.yml:
+  - ssl_on: true
+  - cert_pem_key_name: YourKeyName.key
+  - cert_pem_crt_name: YourCrtName.crt
+  - cert_ca_chain_name: YourCAChainName.crt
+
+**Beats SSL still in the works.**
+
+The following are the variables applicable to the SSL:
+
+| Variable  | Location | Required | Default | Description
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| cert_location | ./roles/elk_stack/defaults/main.yml | No | /etc/ssl/ | Where certificates are currently stored |
+| cert_pem_key_name | ./roles/elk_stack/vars/main.yml | No | N/A | The key file name. Must be configured in /vars if SSL is set |
+| cert_pem_crt_name | ./roles/elk_stack/vars/main.yml | No | N/A | The crt file name. Must be configured in /vars if SSL is set |
+| cert_ca_chain_name |  ./roles/elk_stack/vars/main.yml | No | N/A | The certificate chain file name. Must be configured in /vars if SSL is set |
+| elastic_cert_location | ./roles/elk_stack/defaults/main.yml | No | /etc/elasticsearch/certs/ | Default location to put elasticsearch certs |
+| kibana_cert_location | ./roles/elk_stack/defaults/main.yml | No | /etc/kibana/certs/ | Default location to put Kibana certs |
+| logstash_cert_location | ./roles/elk_stack/defaults/main.yml | No | /etc/logstash/certs/ | Default location to put Logstash certs |
+| ssl_on | ./roles/elk_stack/defaults/main.yml | No | False | If flipped to true, then configures ELK for SSL |
+
 Dependencies
 ------------
 
