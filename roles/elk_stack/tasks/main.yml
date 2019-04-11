@@ -3,6 +3,6 @@
 - include: install_sw.yml
 - include: configure_elastic.yml
 - include: configure_kibana.yml
-- include: configure_logstash.yml
 - include: configure_beats.yml
+- include: configure_logstash.yml
 - include: configure_curator.yml

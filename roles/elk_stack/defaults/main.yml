@@ -1,6 +1,7 @@
 ---
 # defaults file for ELK_Stack
 auditbeat_conf: /etc/auditbeat/auditbeat.yml
+auditbeat_template_path: /etc/logstash/templates/auditbeats.json
 beat_port: 5044
 curator_conf: /etc/curator/curator.yml
 curator_delete_conf: /etc/curator/delete_indices.yml
@@ -8,6 +9,7 @@ delete_after_days: 365
 elastic_conf: /etc/elasticsearch/elasticsearch.yml
 elastic_port: 9200
 filebeat_conf: /etc/filebeat/filebeat.yml
+filebeat_template_path: /etc/logstash/templates/filebeats.json
 kibana_conf: /etc/kibana/kibana.yml
 kibana_port: 5601
 logstash_beat_conf: /etc/logstash/conf.d/01-beats-input.conf
@@ -16,4 +18,3 @@ logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
 replicas: 0
 server_ip: localhost
 shards: 1
-template_path: /etc/logstash/templates/shards.json

@@ -37,6 +37,7 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 | Variable  | Location | Required | Default | Description
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | auditbeat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/auditbeat/auditbeat.yml | Path to the auditbeat configuration file |
+| auditbeat_template_path | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/templates/auditbeats.json | Path for where to create and configure the auditbeat template file |
 | beat_port | ./roles/elk_stack/defaults/main.yml | Yes | 5044 | Configures the port for logstash to listen on and where beats send to |
 | curator_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/curator.yml | Path to a curator configuration file |
 | curator_delete_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/curator/delete_indices.yml | Path to a curator configuration file for delete actions |
@@ -44,6 +45,7 @@ If you wish to change the default value, simply add the variable to ./vars/main.
 | elastic_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/elasticsearch/elasticsearch.yml | Path to the elasticsearch configuration file |
 | elastic_port | ./roles/elk_stack/defaults/main.yml | Yes | 9200 | Configures the port elasticsearch will listen on |
 | filebeat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/filebeat/filebeat.yml | Path to the filebeat configuration file |
+| filebeat_template_path | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/templates/auditbeats.json | Path for where to create and configure the filebeat template file |
 | kibana_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/kibana/kibana.yml | Path to the kibana configuration file |
 | kibana_port | ./roles/elk_stack/defaults/main.yml | Yes | 5601 | Configures the port kibana will listen on |
 | logstash_beat_conf | ./roles/elk_stack/defaults/main.yml | Yes | /etc/logstash/conf.d/01-beats-input.conf | Path to the input configuration for logstash |

@@ -63,23 +63,32 @@
         }
       }
 
-- name: configure_logstash | Make the Template File
-  blockinfile:
-    path: "{{ template_path }}"
-    owner: root
-    group: root
-    mode: 0644
-    create: true
-    backup: true
-    block: |
-      {
-        "index_patterns": ["*"],
-        "order": 0
-        "settings" : {
-          "number_of_shards": {{ shards }},
-          "number_of_replicas": {{ replicas }}
-          }
-      }
+- name: configure_logstash | Copy the Template Files
+  command:  "{{ item }}"
+  with_items:
+    - "/usr/bin/filebeat export template > {{ filebeat_template_path }}"
+    - "/usr/bin/auditbeat export template > {{ auditbeat_template_path }}"
+
+- name: configure_logstash | Change the Templates Shards and Index Application
+  replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { path: "{{ filebeat_template_path }}", regexp: "filebeat-*", replace: "filebeat-*"}
+    - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
+    - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-*", replace: "auditbeat-*"}
+    - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
+
+- name: configure_logstash | Add the Replica Line to the Templates
+  lineinfile:
+    path: "{{ item }}"
+    insertafter: '"number_of_shards": {{ shards }}'
+    line: '      "number_of_replicas": {{ replicas }}'
+    state: present
+  with_items:
+    - "{{ filebeat_template_path }}"
+    - "{{ auditbeat_template_path }}"
 
 - name: configure_logstash | Configure Logstash's Output
   blockinfile:
@@ -91,13 +100,25 @@
     backup: true
     block: |
       output {
-        elasticsearch {
-          hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-          index => "%{[@metadata][beat]}-%{+YYYY.MM}"
-          manage_template => true
-          template => "{{ template_path }}"
-          template_name => "shards_config"
-          template_overwrite => true
+        if [@metadata][beat] =~ "filebeat" {
+          elasticsearch {
+            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+            manage_template => true
+            template_overwrite => true
+            template => "/etc/logstash/templates/filebeat.json"
+            template_name => "filebeats"
+          }
+        }
+       if [@metadata][beat] =~ "auditbeat" {
+          elasticsearch {
+            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+            manage_template => true
+            template_overwrite => true
+            template => "/etc/logstash/templates/auditbeat.json"
+            template_name => "auditbeats"
+          }
         }
       }
 
