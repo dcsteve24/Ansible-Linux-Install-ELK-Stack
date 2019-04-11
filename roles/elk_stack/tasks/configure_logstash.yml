@@ -120,6 +120,13 @@
             template_name => "auditbeats"
           }
         }
+        else {
+          elasticsearch {
+            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+            manage_template => false
+          }
+        }
       }
 
 - name: configure_logstash | Start the logstash Service
