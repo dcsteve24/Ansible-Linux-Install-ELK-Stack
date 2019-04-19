@@ -1,0 +1,57 @@
+---
+- name: install_sw_Debian | Load Vars
+  include_vars: "main.yml"
+
+- name: install_sw_Debian | Install Java
+  apt:
+    name:
+      - openjdk-8-jre-headless
+      - openjdk-8-jdk-headless
+      - apt-transport-https
+    state: latest
+
+- name: install_sw_Debian | Grab Public Signing Key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: install_sw_Debian | Add Apt Repo
+  lineinfile:
+    path: /etc/apt/sources.list.d/elastic.list
+    state: present
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    line: "{{ item }}"
+  with_items:
+    - "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
+    - "deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main"
+
+- name: install_sw_Debian | Install Elastic SW
+  apt:
+    name:
+      - elasticsearch
+      - logstash
+      - kibana
+      - filebeat
+      - elasticsearch-curator
+    state: latest
+    update_cache: true
+
+- name: install_sw_Debian | Open Firewall Ports For Non-Localhost
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - "{{ elastic_port }}"
+    - "{{ kibana_port }}"
+  when: server_ip != "localhost"
+
+- name: install_sw_Debian | Open Beats Port Regardless of Install IP
+  ufw:
+    rule: allow
+    port: "{{ beat_port }}"
+    proto: tcp

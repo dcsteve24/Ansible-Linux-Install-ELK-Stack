@@ -1,0 +1,34 @@
+---
+- name: install_sw_Debian | Grab Public Signing Key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: install_sw_Debian | Add Apt Repo
+  lineinfile:
+    path: /etc/apt/sources.list.d/elastic.list
+    state: present
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    line: 'deb https://artifacts.elastic.co/packages/6.x/apt stable main'
+  when: ansible_os_family == "Debian"
+
+- name: install_sw_Debian | Install Elastic SW (Debian Distro)
+  apt:
+    name:
+      - filebeat
+      - auditbeat
+    state: latest
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: install_sw_Debian | Open Firewall Ports
+  ufw:
+    rule: allow
+    port: "{{ beat_port }}"
+    proto: tcp
+  when: ansible_os_family == "Debian"
