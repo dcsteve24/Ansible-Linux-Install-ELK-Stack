@@ -1,0 +1,29 @@
+---
+- name: install_sw_RHEL | Load Vars
+  include_vars: "main.yml"
+
+- name: install_sw_RHEL | Grab Public Signing Key
+  rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: install_sw_RHEL | Add Yum Repo
+  yum_repository:
+    name: Elastic_6.X_repo
+    baseurl: https://artifacts.elastic.co/packages/6.x/yum
+    gpgcheck: true
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    description: Elastic 6.X Repo
+
+- name: install_sw_RHEL | Install Elastic SW
+  yum:
+    name:
+      - filebeat
+      - auditbeat
+    update_cache: true
+
+- name: install_sw_RHEL | Open Firewall Ports
+  firewalld:
+    port: "{{ beat_port }}/tcp"
+    permanent: true
+    state: enabled

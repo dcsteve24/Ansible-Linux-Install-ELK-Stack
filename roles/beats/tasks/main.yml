@@ -1,5 +1,8 @@
 ---
 # tasks file for filebeat
-- include: install_sw.yaml
+- include: install_sw_rhel.yaml
+  when: ansible_os_family == "RedHat"
+- include: install_sw_debian.yaml
+  when: ansible_os_family == "Debian"
 - include: configure_filebeat.yaml
 - include: configure_auditbeat.yaml
