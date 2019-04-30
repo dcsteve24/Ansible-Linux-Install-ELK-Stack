@@ -63,11 +63,22 @@
         }
       }
 
+- name: configure_logstash | Make the Template Directory
+  file:
+    path: "{{ template_dir }}"
+    state: directory
+
+- name: configure_logstash | Check if Templates Already Exist
+  stat:
+    path: "{{ filebeat_template_path }}"
+  register: path_exist
+
 - name: configure_logstash | Copy the Template Files
-  command:  "{{ item }}"
+  raw:  "{{ item }}"
   with_items:
     - "/usr/bin/filebeat export template > {{ filebeat_template_path }}"
     - "/usr/bin/auditbeat export template > {{ auditbeat_template_path }}"
+  when: path_exist.stat.exists == false
 
 - name: configure_logstash | Change the Templates Shards and Index Application
   replace:
@@ -76,9 +87,10 @@
     replace: "{{ item.replace }}"
   with_items:
     - { path: "{{ filebeat_template_path }}", regexp: "filebeat-.*", replace: "filebeat-*"}
-    - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
+    - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }},' }
     - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-.*", replace: "auditbeat-*"}
-    - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }}' }
+    - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }},' }
+  when: path_exist.stat.exists == false
 
 - name: configure_logstash | Add the Replica Line to the Templates
   lineinfile:
@@ -89,6 +101,7 @@
   with_items:
     - "{{ filebeat_template_path }}"
     - "{{ auditbeat_template_path }}"
+  when: path_exist.stat.exists == false
 
 - name: configure_logstash | Configure Logstash's Output
   blockinfile:
