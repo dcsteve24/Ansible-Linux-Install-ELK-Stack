@@ -1,6 +1,33 @@
----
 
-#SSL Settings (Leave Alone If Not Setting Up SSL)
-cert_pem_key_name: ""
-cert_pem_crt_name: ""
-cert_ca_chain_name: ""
+---
+# DEFAULTS FOR ELK_STACK
+#auditbeat_conf: /etc/auditbeat/auditbeat.yml
+#auditbeat_template_path: "{{ template_dir }}/auditbeats.json"
+#beat_port: 5044
+#curator_conf: /etc/curator/curator.yml
+#curator_delete_conf: /etc/curator/delete_indices.yml
+#delete_after_days: 365
+#elastic_conf: /etc/elasticsearch/elasticsearch.yml
+#elastic_port: 9200
+#filebeat_conf: /etc/filebeat/filebeat.yml
+#filebeat_template_path: "{{ template_dir }}/filebeats.json"
+#kibana_conf: /etc/kibana/kibana.yml
+#kibana_port: 5601
+#logstash_beat_conf: /etc/logstash/conf.d/01-beats-input.conf
+#logstash_output_conf: /etc/logstash/conf.d/30-elasticsearch-output.conf
+#logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
+#replicas: 0
+#server_ip: localhost
+#shards: 1
+#template_dir: /etc/logstash/template
+
+#SSL SETTINGS
+#cert_ca_chain_name: "elk.csr"
+#cert_location: /etc/ssl/
+#cert_pem_key_name: "elk.pem"
+#cert_pem_crt_name: "elk.crt"
+#elastic_cert_location: /etc/elasticsearch/certs/
+#kibana_cert_location: /etc/kibana/certs/
+#logstash_cert_location: /etc/logstash/certs/
+#ssl_generate_cert: false
+#ssl_on: false
