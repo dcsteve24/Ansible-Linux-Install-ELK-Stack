@@ -26,7 +26,7 @@
     group: root
     line: "{{ item }}"
   with_items:
-    - "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
+    - "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
     - "deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main"
 
 - name: install_sw_Debian | Install Elastic SW

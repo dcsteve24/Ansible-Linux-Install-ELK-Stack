@@ -14,7 +14,7 @@
     mode: 0644
     owner: root
     group: root
-    line: 'deb https://artifacts.elastic.co/packages/6.x/apt stable main'
+    line: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
   when: ansible_os_family == "Debian"
 
 - name: install_sw_Debian | Install Elastic SW (Debian Distro)
