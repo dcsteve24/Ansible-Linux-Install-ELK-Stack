@@ -1,7 +1,4 @@
 ---
-- name: configure_filebeat | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_filebeat | See if Default Config File
   lineinfile:
     path: "{{ filebeat_conf }}"
