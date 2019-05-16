@@ -1,5 +1,6 @@
 ---
 # tasks file for filebeat
+- include_vars: "main.yml"
 - include: install_sw_rhel.yaml
   when: ansible_os_family == "RedHat"
 - include: install_sw_debian.yaml
