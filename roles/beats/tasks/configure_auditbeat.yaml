@@ -1,7 +1,4 @@
 ---
-- name: configure_auditbeat | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_auditbeat | See if Default Config File
   lineinfile:
     path: "{{ auditbeat_conf }}"
