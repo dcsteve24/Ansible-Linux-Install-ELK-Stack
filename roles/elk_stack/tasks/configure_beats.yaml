@@ -6,10 +6,7 @@
   include_role:
     name: beats
   vars:
-    auditbeat_conf: "{{ auditbeat_conf }}"
-    beat_port: "{{ beat_port }}"
     elk_ip: "{{ server_ip }}"
-    filebeat_conf: "{{ filebeat_conf }}"
 
 - name: configure_beats | Load Filebeat Kibana Dashboard
   command: /usr/bin/filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['{{ server_ip}}:{{ elastic_port}}'] -E setup.kibana.host={{ server_ip }}:{{ kibana_port }}
