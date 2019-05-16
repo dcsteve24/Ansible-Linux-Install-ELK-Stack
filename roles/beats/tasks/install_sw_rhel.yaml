@@ -1,7 +1,4 @@
 ---
-- name: install_sw_RHEL | Load Vars
-  include_vars: "main.yml"
-
 - name: install_sw_RHEL | Grab Public Signing Key
   rpm_key:
     state: present
