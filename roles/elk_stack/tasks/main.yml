@@ -1,13 +1,18 @@
 ---
-# tasks file for ELK_Stack
+# import vars
+- include_vars: "main.yml"
+
+# install sw
 - include: install_sw_RHEL.yaml
   when: ansible_os_family == "RedHat"
 - include: install_sw_debian.yaml
   when: ansible_os_family == "Debian"
+
+#configure
+- include: move_ssl_certs.yaml
+  when: ssl_on
 - include: configure_elastic.yaml
 - include: configure_kibana.yaml
 - include: configure_beats.yaml
 - include: configure_logstash.yaml
 - include: configure_curator.yaml
-- include: configure_ssl.yaml
-  when: ssl_on

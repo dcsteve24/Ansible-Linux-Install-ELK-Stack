@@ -15,7 +15,7 @@
     group: root
     regexp: "{{ item.regex }}"
     replace: "{{ item.replace }}"
-  with_items:
+  loop:
     - { regex: "output.elasticsearch:", replace: "#output.elasticsearch" }
     - { regex: 'hosts: \["localhost:9200"]', replace: '#hosts: ["localhost:9200"]' }
     - { regex: "#output.logstash:", replace: "output.logstash:" }

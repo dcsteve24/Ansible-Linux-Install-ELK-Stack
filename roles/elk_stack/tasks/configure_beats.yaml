@@ -8,6 +8,29 @@
   vars:
     elk_ip: "{{ server_ip }}"
 
+- name: configure_beats | Swap Back to HTTP to Load Templates (if SSL True)
+  replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.enabled: true", replace: "#xpack.security.enabled: true" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.enabled: true", replace: "#xpack.security.http.ssl.enabled: true" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.transport.ssl.enabled: true", replace: "#xpack.security.transport.ssl.enabled: true" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.transport.ssl.verification_mode: certificate", replace: "#xpack.security.transport.ssl.verification_mode: certificate" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}", replace: "#xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}", replace: "#xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}" }
+    - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.certificate_authorities: \["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]", replace: "#xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]" }
+    - 
+  when: ssl_on
+
+- name: configure_kibana | Replace Host Entry with HTTPS (if SSL True)
+  replace:
+    path: "{{ kibana.conf }}"
+    regexp: 'elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]'
+    replace: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]'
+  when: ssl_on
+
 - name: configure_beats | Load Filebeat Kibana Dashboard
   command: /usr/bin/filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['{{ server_ip}}:{{ elastic_port}}'] -E setup.kibana.host={{ server_ip }}:{{ kibana_port }}
   changed_when: false

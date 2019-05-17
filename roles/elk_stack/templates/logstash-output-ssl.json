@@ -1,0 +1,32 @@
+output {
+  if [@metadata][beat] =~ "filebeat" {
+    elasticsearch {
+      hosts => ["https://{{ server_ip }}:{{ elastic_port }}"]
+      cacert => "{{ logstash_cert_location }}{{ cert_ca_chain_name }}"
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => true
+      template_overwrite => true
+      template => "{{ filebeat_template_path }}"
+      template_name => "filebeats"
+    }
+  }
+ if [@metadata][beat] =~ "auditbeat" {
+    elasticsearch {
+      hosts => ["https://{{ server_ip }}:{{ elastic_port }}"]
+      cacert => "{{ logstash_cert_location }}{{ cert_ca_chain_name }}"
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => true
+      template_overwrite => true
+      template => "{{ auditbeat_template_path }}"
+      template_name => "auditbeats"
+    }
+  }
+  else {
+    elasticsearch {
+      hosts => ["https://{{ server_ip }}:{{ elastic_port }}"]
+      cacert => "{{ logstash_cert_location }}{{ cert_ca_chain_name }}"
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => false
+    }
+  }
+}

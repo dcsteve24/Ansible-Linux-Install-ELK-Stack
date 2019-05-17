@@ -11,9 +11,24 @@
     owner: root
     group: elasticsearch
     line: '{{ item }}'
-  with_items:
+  loop:
     - 'network.host: "{{ server_ip }}"'
     - 'http.port: {{ elastic_port }}'
+
+- name: configure_elastic | Configure SSL For Elasticsearch (if SSL True)
+  lineinfile:
+    path: "{{ elastic_conf }}"
+    state: present
+    line: "{{ item }}"
+  loop:
+    - "xpack.security.enabled: true"
+    - "xpack.security.http.ssl.enabled: true"
+    - "xpack.security.transport.ssl.enabled: true"
+    - "xpack.security.transport.ssl.verification_mode: certificate"
+    - "xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}"
+    - "xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}"
+    - 'xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]'
+  when: ssl_on
 
 - name: configure_elastic | Start the Elastic Service
   service:

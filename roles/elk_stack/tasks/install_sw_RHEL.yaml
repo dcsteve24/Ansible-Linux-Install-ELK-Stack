@@ -45,7 +45,7 @@
     port: "{{ item }}"
     permanent: true
     state: enabled
-  with_items:
+  loop:
     - "{{ elastic_port }}/tcp"
     - "{{ kibana_port }}/tcp"
   when: server_ip != "localhost"

@@ -1,0 +1,29 @@
+output {
+  if [@metadata][beat] =~ "filebeat" {
+    elasticsearch {
+      hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => true
+      template_overwrite => true
+      template => "/etc/logstash/templates/filebeat.json"
+      template_name => "filebeats"
+    }
+  }
+ if [@metadata][beat] =~ "auditbeat" {
+    elasticsearch {
+      hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => true
+      template_overwrite => true
+      template => "/etc/logstash/templates/auditbeat.json"
+      template_name => "auditbeats"
+    }
+  }
+  else {
+    elasticsearch {
+      hosts => ["{{ server_ip }}:{{ elastic_port }}"]
+      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      manage_template => false
+    }
+  }
+}

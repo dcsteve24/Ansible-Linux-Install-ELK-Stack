@@ -75,7 +75,7 @@
 
 - name: configure_logstash | Copy the Template Files
   raw:  "{{ item }}"
-  with_items:
+  loop:
     - "/usr/bin/filebeat export template > {{ filebeat_template_path }}"
     - "/usr/bin/auditbeat export template > {{ auditbeat_template_path }}"
   when: path_exist.stat.exists == false
@@ -85,7 +85,7 @@
     path: "{{ item.path }}"
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
-  with_items:
+  loop:
     - { path: "{{ filebeat_template_path }}", regexp: "filebeat-.*", replace: "filebeat-*"}
     - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }},' }
     - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-.*", replace: "auditbeat-*"}
@@ -98,49 +98,30 @@
     insertafter: '"number_of_shards": {{ shards }}'
     line: '      "number_of_replicas": {{ replicas }}'
     state: present
-  with_items:
+  loop:
     - "{{ filebeat_template_path }}"
     - "{{ auditbeat_template_path }}"
   when: path_exist.stat.exists == false
 
-- name: configure_logstash | Configure Logstash's Output
-  blockinfile:
-    path: "{{ logstash_output_conf }}"
+- name: configure_logstash | Configure Logstash's Output (Not SSL)
+  template:
+    src: "logstash-output.json"
+    dest: "{{ logstash_output_conf }}"
     owner: root
     group: root
     mode: 0644
-    create: true
     backup: true
-    block: |
-      output {
-        if [@metadata][beat] =~ "filebeat" {
-          elasticsearch {
-            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
-            manage_template => true
-            template_overwrite => true
-            template => "/etc/logstash/templates/filebeat.json"
-            template_name => "filebeats"
-          }
-        }
-       if [@metadata][beat] =~ "auditbeat" {
-          elasticsearch {
-            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
-            manage_template => true
-            template_overwrite => true
-            template => "/etc/logstash/templates/auditbeat.json"
-            template_name => "auditbeats"
-          }
-        }
-        else {
-          elasticsearch {
-            hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-            index => "%{[@metadata][beat]}-%{+YYYY.MM}"
-            manage_template => false
-          }
-        }
-      }
+  when: not ssl_on
+
+- name: configure_logstash | Configure Logstash's Output (SSL)
+  template:
+    src: "logstash-output-ssl.json"
+    dest: "{{ logstash_output_conf }}"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  when: ssl_on
 
 - name: configure_logstash | Start the logstash Service
   service:

@@ -1,0 +1,16 @@
+---
+- name: move_ssl_certs | Copy the Certs to The Needed Location(s)
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: "{{ cert_location }}{{ cert_ca_chain_name }}", dest: "{{ logstash_cert_location }}{{ cert_ca_chain_name }}", owner: "root", group: "root", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_ca_chain_name }}", dest: "{{ kibana_cert_location }}{{ cert_ca_chain_name }}", owner: "root", group: "root", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_pem_crt_name }}", dest: "{{ kibana_cert_location }}{{ cert_pem_crt_name }}", owner: "root", group: "root", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_pem_key_name }}", dest: "{{ kibana_cert_location }}{{ cert_pem_key_name }}", owner: "root", group: "root", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_ca_chain_name }}", dest: "{{ elastic_cert_location }}{{ cert_ca_chain_name }}", owner: "root", group: "elasticsearch", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_pem_crt_name }}", dest: "{{ elastic_cert_location }}{{ cert_pem_crt_name }}", owner: "root", group: "elasticsearch", mode: "0644" }
+    - { src: "{{ cert_location }}{{ cert_pem_key_name }}", dest: "{{ elastic_cert_location }}{{ cert_pem_key_name }}", owner: "root", group: "elasticsearch", mode: "0644" }
