@@ -21,12 +21,12 @@
     - { path: "{{ elastic_conf }}", regexp: "xpack.security.transport.ssl.verification_mode: certificate", replace: "#xpack.security.transport.ssl.verification_mode: certificate" }
     - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}", replace: "#xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}", replace: "#xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}" }
-    - { path: "{{ elastic_conf }}", regexp: "xpack.security.http.ssl.certificate_authorities: \["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]", replace: "#xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]" }
+    - { path: "{{ elastic_conf }}", regexp: 'xpack.security.http.ssl.certificate_authorities: \["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]', replace: '#xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]' }
     - { path: "{{ kibana_conf }}", regexp: "elasticsearch.ssl.certificateAuthorities: {{ kibana_cert_location }}{{ cert_ca_chain_name }}", replace: "#elasticsearch.ssl.certificateAuthorities: {{ kibana_cert_location }}{{ cert_ca_chain_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "server.ssl.enabled: true", replace: "#server.ssl.enabled: true" }
     - { path: "{{ kibana_conf }}", regexp: "server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}", replace: "#server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}", replace: "#server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}" }
-    - { path: "{{ kibana_conf }}", regexp: "elasticsearch.hosts: \["https://{{ server_ip }}:{{ elastic_port}}"]", replace: "elasticsearch.hosts: ["http://{{ server_ip }}:{{ elastic_port}}"]" }
+    - { path: "{{ kibana_conf }}", regexp: 'elasticsearch.hosts: \["https://{{ server_ip }}:{{ elastic_port}}"]', replace: 'elasticsearch.hosts: ["http://{{ server_ip }}:{{ elastic_port}}"]' }
   when: ssl_on
 
 - name: configure_beats | Reload Services to HTTP (if SSL True)
@@ -58,12 +58,12 @@
     - { path: "{{ elastic_conf }}", regexp: "#xpack.security.transport.ssl.verification_mode: certificate", replace: "xpack.security.transport.ssl.verification_mode: certificate" }
     - { path: "{{ elastic_conf }}", regexp: "#xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}", replace: "xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ elastic_conf }}", regexp: "#xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}", replace: "xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}" }
-    - { path: "{{ elastic_conf }}", regexp: "#xpack.security.http.ssl.certificate_authorities: \["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]", replace: "xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]" }
+    - { path: "{{ elastic_conf }}", regexp: '#xpack.security.http.ssl.certificate_authorities: \["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]', replace: 'xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]' }
     - { path: "{{ kibana_conf }}", regexp: "#elasticsearch.ssl.certificateAuthorities: {{ kibana_cert_location }}{{ cert_ca_chain_name }}", replace: "#elasticsearch.ssl.certificateAuthorities: {{ kibana_cert_location }}{{ cert_ca_chain_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "#server.ssl.enabled: true", replace: "server.ssl.enabled: true" }
     - { path: "{{ kibana_conf }}", regexp: "#server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}", replace: "server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "#server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}", replace: "server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}" }
-    - { path: "{{ kibana_conf }}", regexp: "elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]", replace: "elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]" }
+    - { path: "{{ kibana_conf }}", regexp: 'elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]', replace: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]' }
   when: ssl_on
 
 - name: configure_beats | Reload Services to HTTPS (if SSL True)
