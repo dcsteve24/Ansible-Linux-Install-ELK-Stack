@@ -1,0 +1,10 @@
+#Inventory Files
+
+
+[ElasticsearchMasters]
+
+[ElasticsearchDataNodes]
+
+[Kibana]
+
+[Logstash]

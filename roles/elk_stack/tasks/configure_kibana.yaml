@@ -1,7 +1,4 @@
 ---
-- name: configure_kibana | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_kibana | Configure Kibana Host/Port
   lineinfile:
     path: "{{ kibana_conf }}"
@@ -36,7 +33,7 @@
 
 - name: configure_kibana | Replace Host Entry with HTTPS (if SSL True)
   replace:
-    path: "{{ kibana.conf }}"
+    path: "{{ kibana_conf }}"
     regexp: 'elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]'
     replace: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]'
   when: ssl_on

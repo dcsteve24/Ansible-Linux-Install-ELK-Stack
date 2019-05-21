@@ -23,9 +23,10 @@ The beats role can be ran independently by running the ./playbooks/Beats.yml on 
 Requirements
 ------------
 
-1) Configure your hosts and ansible user at ./playbooks/ELK_Stack.yml
-2) Configure any desired changes from the defaults in ./roles/elk_stack/vars/main.yml (see Role Variables section for what to place). Add the variable and the desired setting under the ---
-3) Run the play. I usually run my play with ansible-playbook -kK /path/to/play.
+1) Configure your ansible hosts file to add the groups listed in this ./hosts file, or simply put this file in your ansible root directory (/etc/ansible by default) and add the hostnames or IPs under each area. If you are a small business, you may have all roles as a single server. (note a elasticsearch master cannot also be a data node. If you dont have another node, leave this blank with no hosts.)
+2) Configure your hosts and ansible user at ./playbooks/ELK_Stack.yml
+3) Configure any desired changes from the defaults in ./roles/elk_stack/vars/main.yml (see Role Variables section for what to place). Add the variable and the desired setting under the ---
+4) Run the play. I usually run my play with ansible-playbook -kK /path/to/play.
 
 Role Variables
 --------------

@@ -1,12 +1,10 @@
 ---
-- name: install_sw_Debian | Load Vars
-  include_vars: "main.yml"
 
 - name: install_sw_Debian | Install Java
   apt:
     name:
-      - openjdk-8-jre-headless
-      - openjdk-8-jdk-headless
+      - openjdk-11-jre-headless
+      - openjdk-11-jdk-headless
       - apt-transport-https
     state: latest
 
@@ -15,7 +13,7 @@
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
 
-- name: install_sw_Debian | Add Apt Repo
+- name: install_sw_Debian | Add Elastic Apt Repo
   lineinfile:
     path: /etc/apt/sources.list.d/elastic.list
     state: present
@@ -24,21 +22,44 @@
     mode: 0644
     owner: root
     group: root
-    line: "{{ item }}"
-  loop:
-    - "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
-    - "deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main"
+    line: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+
+- name: install_sw_Debian | Add Elastic Curator Apt Repo
+  lineinfile:
+    path: /etc/apt/sources.list.d/elastic.list
+    state: present
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    line: "deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main"
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
 
 - name: install_sw_Debian | Install Elastic SW
   apt:
     name:
       - elasticsearch
-      - logstash
-      - kibana
-      - filebeat
       - elasticsearch-curator
-    state: latest
     update_cache: true
+    state: latest
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
+
+- name: install_sw_Debian | Install Elastic SW
+  apt:
+    name:
+      - logstash
+    update_cache: true
+    state: latest
+  when: inventory_hostname in groups['Logstash']
+
+  - name: install_sw_Debian | Install Elastic SW
+    apt:
+      name:
+        - kibana
+      update_cache: true
+      state: latest
+    when: inventory_hostname in groups['Kibana']
 
 - name: install_sw_Debian | Open Firewall Ports For Non-Localhost
   ufw:

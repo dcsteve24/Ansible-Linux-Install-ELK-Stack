@@ -1,7 +1,4 @@
 ---
-- name: configure_beats | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_beats | Load the Beats Role
   include_role:
     name: beats

@@ -5,8 +5,8 @@
 - name: install_sw_RHEL | Install Java
   yum:
     name:
-      - java-1.8.0-openjdk
-      - java-1.8.0-openjdk-devel
+      - java-1.11.0-openjdk
+      - java-1.11.0-openjdk-devel
     state: latest
 
 - name: install_sw_RHEL | Grab Public Signing Key
@@ -29,16 +29,29 @@
     gpgcheck: True
     gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     description: Curator 5 Repo For RHEL 7 Family
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
 
-- name: install_sw_RHEL | Install Elastic SW
+- name: install_sw_RHEL | Install Elasticssearch SW
   yum:
     name:
       - elasticsearch
-      - logstash
-      - kibana
-      - filebeat
       - elasticsearch-curator
     update_cache: true
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
+
+- name: install_sw_RHEL | Install Kibana SW
+  yum:
+    name:
+      - kibana
+    update_cache: true
+  when: inventory_hostname in groups['Kibana']
+
+- name: install_sw_RHEL | Install Logstash SW
+  yum:
+    name:
+      - logstash
+    update_cache: true
+  when: inventory_hostname in groups['Logstash']
 
 - name: install_sw_RHEL | Open Firewall Ports For Non-Localhost (RedHat Distros)
   firewalld:

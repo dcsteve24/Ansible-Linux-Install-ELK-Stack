@@ -5,14 +5,24 @@
 # install sw
 - include: install_sw_RHEL.yaml
   when: ansible_os_family == "RedHat"
+
 - include: install_sw_debian.yaml
   when: ansible_os_family == "Debian"
 
 #configure
 - include: move_ssl_certs.yaml
   when: ssl_on
+
 - include: configure_elastic.yaml
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
+
 - include: configure_kibana.yaml
-- include: configure_beats.yaml
+  when: inventory_hostname in groups['Kibana']
+
 - include: configure_logstash.yaml
+  when: inventory_hostname in groups['Logstash']
+
+- include: configure_beats.yaml
+
 - include: configure_curator.yaml
+  when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']

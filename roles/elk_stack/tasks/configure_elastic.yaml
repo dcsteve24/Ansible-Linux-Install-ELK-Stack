@@ -1,7 +1,4 @@
 ---
-- name: configure_elastic | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_elastic | Configure Listening IP and Port
   lineinfile:
     path: "{{ elastic_conf }}"
@@ -14,6 +11,8 @@
   loop:
     - 'network.host: "{{ server_ip }}"'
     - 'http.port: {{ elastic_port }}'
+    - 'xpack.license.self_generated.type: basic'
+    - 'cluster.initial_master_nodes: {{ server_ip }}'
 
 - name: configure_elastic | Configure SSL For Elasticsearch (if SSL True)
   lineinfile:

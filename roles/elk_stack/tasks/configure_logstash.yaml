@@ -1,7 +1,4 @@
 ---
-- name: configure_logstash | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_logstash | Configure beats listening port
   blockinfile:
     path: "{{ logstash_beat_conf }}"

@@ -1,7 +1,4 @@
 ---
-- name: configure_curator | Load Vars
-  include_vars: "main.yml"
-
 - name: configure_curator | Configure Curator
   blockinfile:
     path: "{{ curator_conf }}"
