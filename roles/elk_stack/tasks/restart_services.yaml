@@ -1,0 +1,19 @@
+---
+- name: restart_services | Restarting the Services to Ensure Changes (if Any) Take Affect
+  service:
+    name: "elasticsearch"
+    state: restarted
+  changed_when: false
+
+- name: restart_services | Give Elasticsearch a Second to Finish Booting Up
+  pause:
+    seconds: 15
+
+- name: restart_services | Restarting the Rest of the Services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - "kibana"
+    - "logstash"
+  changed_when: false

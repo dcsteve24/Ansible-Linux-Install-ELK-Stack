@@ -18,7 +18,7 @@ logstash_sysfilter_conf: /etc/logstash/conf.d/10-syslog-filter.conf
 replicas: 0
 server_ip: localhost
 shards: 1
-template_dir: /etc/logstash/template
+template_dir: /etc/logstash/templates
 
 #SSL Settings
 cert_ca_chain_name: "elk.csr"

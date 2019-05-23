@@ -24,7 +24,7 @@
     backup: true
     block: |
       filter {
-        if [fileset][module] == "system" {
+        if [event][module] == "system" {
           if [fileset][name] == "auth" {
             grok {
               match => { "message" => ["%{SYSLOGTIMESTAMP:[system][auth][timestamp]} %{SYSLOGHOST:[system][auth][hostname]} sshd(?:\[%{POSINT:[system][auth][pid]}\])?: %{DATA:[system][auth][ssh][event]} %{DATA:[system][auth][ssh][method]} for (invalid user )?%{DATA:[system][auth][user]} from %{IPORHOST:[system][auth][ssh][ip]} port %{NUMBER:[system][auth][ssh][port]} ssh2(: %{GREEDYDATA:[system][auth][ssh][signature]})?",
@@ -65,17 +65,23 @@
     path: "{{ template_dir }}"
     state: directory
 
-- name: configure_logstash | Check if Templates Already Exist
-  stat:
-    path: "{{ filebeat_template_path }}"
-  register: path_exist
-
 - name: configure_logstash | Copy the Template Files
   raw:  "{{ item }}"
   loop:
     - "/usr/bin/filebeat export template > {{ filebeat_template_path }}"
     - "/usr/bin/auditbeat export template > {{ auditbeat_template_path }}"
-  when: path_exist.stat.exists == false
+  changed_when: false
+
+- name: configure_logstash | Change the Templates Shards and Index Application
+  replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+    before: "mappings"
+  loop:
+    - { path: "{{ filebeat_template_path }}", regexp: '"filebeat-.*', replace: '"filebeat-*"' }
+    - { path: "{{ auditbeat_template_path }}", regexp: '"auditbeat-.*', replace: '"auditbeat-*"' }
+  changed_when: false
 
 - name: configure_logstash | Change the Templates Shards and Index Application
   replace:
@@ -83,22 +89,20 @@
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
   loop:
-    - { path: "{{ filebeat_template_path }}", regexp: "filebeat-.*", replace: "filebeat-*"}
-    - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }},' }
-    - { path: "{{ auditbeat_template_path }}", regexp: "auditbeat-.*", replace: "auditbeat-*"}
-    - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3', replace: '"number_of_shards": {{ shards }},' }
-  when: path_exist.stat.exists == false
+    - { path: "{{ filebeat_template_path }}", regexp: '"number_of_shards": 3,', replace: '"number_of_shards": {{ shards }},' }
+    - { path: "{{ auditbeat_template_path }}", regexp: '"number_of_shards": 3,', replace: '"number_of_shards": {{ shards }},' }
+  changed_when: false
 
 - name: configure_logstash | Add the Replica Line to the Templates
   lineinfile:
     path: "{{ item }}"
     insertafter: '"number_of_shards": {{ shards }}'
-    line: '      "number_of_replicas": {{ replicas }}'
+    line: '      "number_of_replicas": {{ replicas }},'
     state: present
   loop:
     - "{{ filebeat_template_path }}"
     - "{{ auditbeat_template_path }}"
-  when: path_exist.stat.exists == false
+  changed_when: false
 
 - name: configure_logstash | Configure Logstash's Output (Not SSL)
   template:

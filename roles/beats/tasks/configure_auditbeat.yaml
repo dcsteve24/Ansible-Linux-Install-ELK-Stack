@@ -21,7 +21,12 @@
     - { regex: "#output.logstash:", replace: "output.logstash:" }
     - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ elk_ip }}:{{ beat_port}}"]'}
   when: (conf.changed) or (conf.failed)
-  notify: restart auditbeat
+
+- name: configure_auditbeat | Restart auditbeat
+  service:
+    name: auditbeat
+    state: restarted
+  changed_when: false
 
 - name: configure_auditbeat | Start auditbeat
   service:

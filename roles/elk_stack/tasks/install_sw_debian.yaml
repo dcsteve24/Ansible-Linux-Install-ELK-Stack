@@ -45,7 +45,7 @@
     state: latest
   when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
 
-- name: install_sw_Debian | Install Elastic SW
+- name: install_sw_Debian | Install Logstash SW
   apt:
     name:
       - logstash
@@ -53,13 +53,13 @@
     state: latest
   when: inventory_hostname in groups['Logstash']
 
-  - name: install_sw_Debian | Install Elastic SW
-    apt:
-      name:
-        - kibana
-      update_cache: true
-      state: latest
-    when: inventory_hostname in groups['Kibana']
+- name: install_sw_Debian | Install Kibana SW
+  apt:
+    name:
+      - kibana
+    update_cache: true
+    state: latest
+  when: inventory_hostname in groups['Kibana']
 
 - name: install_sw_Debian | Open Firewall Ports For Non-Localhost
   ufw:

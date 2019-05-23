@@ -26,3 +26,5 @@
 
 - include: configure_curator.yaml
   when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
+
+- include: restart_services.yaml

@@ -21,10 +21,16 @@
     - { regex: "#output.logstash:", replace: "output.logstash:" }
     - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ elk_ip }}:{{ beat_port}}"]'}
   when: (conf.changed) or (conf.failed)
-  notify: restart filebeat
 
 - name: configure_filebeat | Enables the beat's module, templates, and dashboard
   command: "/usr/bin/filebeat modules enable system"
+  changed_when: false
+
+- name: configure_filebeat | Restart Filebeat
+  service:
+    name: filebeat
+    state: restarted
+  changed_when: false
 
 - name: configure_filebeat | Start Filebeat
   service:
