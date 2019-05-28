@@ -9,7 +9,7 @@ output {
       template_name => "filebeats"
     }
   }
- if [@metadata][beat] =~ "auditbeat" {
+ else if [@metadata][beat] =~ "auditbeat" {
     elasticsearch {
       hosts => ["{{ server_ip }}:{{ elastic_port }}"]
       index => "%{[@metadata][beat]}-%{+YYYY.MM}"
@@ -22,7 +22,7 @@ output {
   else {
     elasticsearch {
       hosts => ["{{ server_ip }}:{{ elastic_port }}"]
-      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      index => "catchall-%{+YYYY.MM}"
       manage_template => false
     }
   }

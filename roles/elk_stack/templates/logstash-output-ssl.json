@@ -10,7 +10,7 @@ output {
       template_name => "filebeats"
     }
   }
- if [@metadata][beat] =~ "auditbeat" {
+ else if [@metadata][beat] =~ "auditbeat" {
     elasticsearch {
       hosts => ["https://{{ server_ip }}:{{ elastic_port }}"]
       cacert => "{{ logstash_cert_location }}{{ cert_ca_chain_name }}"
@@ -25,7 +25,7 @@ output {
     elasticsearch {
       hosts => ["https://{{ server_ip }}:{{ elastic_port }}"]
       cacert => "{{ logstash_cert_location }}{{ cert_ca_chain_name }}"
-      index => "%{[@metadata][beat]}-%{+YYYY.MM}"
+      index => "catchall-%{+YYYY.MM}"
       manage_template => false
     }
   }
