@@ -20,7 +20,7 @@
     - { regex: 'hosts: \["localhost:9200"]', replace: '#hosts: ["localhost:9200"]' }
     - { regex: "#output.logstash:", replace: "output.logstash:" }
     - { regex: '#hosts: \["localhost:5044"]', replace: 'hosts: ["{{ elk_ip }}:{{ beat_port}}"]'}
-    - { regex: "# ilm.enabled: false", replace: "ilm.enabled: false" }
+    - { regex: "#ilm.enabled: false", replace: "ilm.enabled: false" }
   when: (conf.changed) or (conf.failed)
 
 - name: configure_auditbeat | Restart auditbeat
