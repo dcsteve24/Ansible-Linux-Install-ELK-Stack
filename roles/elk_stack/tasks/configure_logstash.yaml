@@ -112,7 +112,7 @@
     group: root
     mode: 0644
     backup: true
-  when: not ssl_on
+  when: not ssl_on|bool
 
 - name: configure_logstash | Configure Logstash's Output (SSL)
   template:
@@ -122,7 +122,7 @@
     group: root
     mode: 0644
     backup: true
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_logstash | Start the logstash Service
   service:

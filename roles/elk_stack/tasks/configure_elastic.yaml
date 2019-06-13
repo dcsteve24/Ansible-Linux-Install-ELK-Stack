@@ -27,7 +27,7 @@
     - "xpack.security.http.ssl.key: {{ elastic_cert_location }}{{ cert_pem_key_name }}"
     - "xpack.security.http.ssl.certificate: {{ elastic_cert_location }}{{ cert_pem_crt_name }}"
     - 'xpack.security.http.ssl.certificate_authorities: ["{{ elastic_cert_location }}{{ cert_ca_chain_name }}"]'
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_elastic | Start the Elastic Service
   service:

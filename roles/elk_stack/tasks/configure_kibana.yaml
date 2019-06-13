@@ -17,7 +17,7 @@
     path: "{{ kibana_conf }}"
     state: present
     line: 'elasticsearch.hosts: ["http://{{ server_ip }}:{{ elastic_port}}"]'
-  when: not ssl_on
+  when: not ssl_on|bool
 
 - name: configure_kibana | Configure SSL For Kibana (if SSL True)
   lineinfile:
@@ -29,14 +29,14 @@
     - "server.ssl.enabled: true"
     - "server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}"
     - "server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}"
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_kibana | Replace Host Entry with HTTPS (if SSL True)
   replace:
     path: "{{ kibana_conf }}"
     regexp: 'elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]'
     replace: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]'
-  when: ssl_on
+  when: ssl_on|bool
 
 #in case configuration wasn't previously http -- or is new setup
 - name: configure_kibana | Ensure Elasticsearch.hosts Line Present (if SSL True)
@@ -44,7 +44,7 @@
     path: "{{ kibana_conf }}"
     state: present
     line: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]'
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_kibana | Start Kibana Service
   service:

@@ -24,7 +24,7 @@
     - { path: "{{ kibana_conf }}", regexp: "server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}", replace: "#server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}", replace: "#server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}" }
     - { path: "{{ kibana_conf }}", regexp: 'elasticsearch.hosts: \["https://{{ server_ip }}:{{ elastic_port}}"]', replace: 'elasticsearch.hosts: ["http://{{ server_ip }}:{{ elastic_port}}"]' }
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_beats | Reload Services to HTTP (if SSL True)
   service:
@@ -33,12 +33,12 @@
   loop:
     - kibana
     - elasticsearch
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_beats | Pause to Let the ElasticSearch Service Fully Start
   pause:
     minutes: 1
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_beats | Load Filebeat Kibana Dashboard
   command: "/usr/bin/filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['{{ server_ip}}:{{ elastic_port}}'] -E setup.kibana.host={{ server_ip }}:{{ kibana_port }}"
@@ -66,7 +66,7 @@
     - { path: "{{ kibana_conf }}", regexp: "#server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}", replace: "server.ssl.key: {{ kibana_cert_location }}{{ cert_pem_key_name }}" }
     - { path: "{{ kibana_conf }}", regexp: "#server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}", replace: "server.ssl.certificate: {{ kibana_cert_location }}{{ cert_pem_crt_name }}" }
     - { path: "{{ kibana_conf }}", regexp: 'elasticsearch.hosts: \["http://{{ server_ip }}:{{ elastic_port}}"]', replace: 'elasticsearch.hosts: ["https://{{ server_ip }}:{{ elastic_port}}"]' }
-  when: ssl_on
+  when: ssl_on|bool
 
 - name: configure_beats | Reload Services to HTTPS (if SSL True)
   service:
@@ -75,4 +75,4 @@
   loop:
     - kibana
     - elasticsearch
-  when: ssl_on
+  when: ssl_on|bool

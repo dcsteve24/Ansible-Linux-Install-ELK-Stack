@@ -11,7 +11,7 @@
 
 #configure
 - include: move_ssl_certs.yaml
-  when: ssl_on
+  when: ssl_on|bool
 
 - include: configure_elastic.yaml
   when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
