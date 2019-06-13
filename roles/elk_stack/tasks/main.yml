@@ -19,10 +19,10 @@
 - include: configure_kibana.yaml
   when: inventory_hostname in groups['Kibana']
 
+- include: configure_beats.yaml
+
 - include: configure_logstash.yaml
   when: inventory_hostname in groups['Logstash']
-
-- include: configure_beats.yaml
 
 - include: configure_curator.yaml
   when: inventory_hostname in groups['ElasticsearchMasters'] or inventory_hostname in groups['ElasticsearchDataNodes']
